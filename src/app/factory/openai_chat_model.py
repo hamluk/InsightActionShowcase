@@ -7,4 +7,5 @@ def init_openai_chat_model(llm_model_settings: LLMModelSettings):
     return ChatOpenAI(
             temperature=llm_model_settings.temperature,
             model=llm_model_settings.model_name,
+            api_key=llm_model_settings.openai_api_key,
         )

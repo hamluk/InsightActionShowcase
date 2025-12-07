@@ -8,6 +8,7 @@ from langchain_openai import ChatOpenAI
 
 from src.app.config import LLMModelSettings, MailSettings, Settings
 from src.app.database.langchain_qdrant_wrapper import QdrantLangchainWrapper
+from src.app.factory.openai_chat_model import init_openai_chat_model
 from src.app.schemas.action import ActionProposal
 from src.app.schemas.insight import Insight
 
@@ -18,10 +19,7 @@ def _run_retrival_insight_chain(insight: Insight, llm_model_settings: LLMModelSe
         ("human", "Create the action proposal based on the given insight information.")
     ])
 
-    llm_chat = ChatOpenAI(
-        temperature=llm_model_settings.temperature,
-        model=llm_model_settings.model_name,
-    )
+    llm_chat = init_openai_chat_model(llm_model_settings)
     parser = PydanticOutputParser(pydantic_object=ActionProposal)
 
     chain = chat_prompt | llm_chat | parser

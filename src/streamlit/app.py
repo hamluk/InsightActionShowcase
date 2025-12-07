@@ -25,6 +25,8 @@ if "upload_pw_input" not in st.session_state:
     st.session_state.upload_pw_input = None
 if "locked" not in st.session_state:
     st.session_state.locked = False
+if "api_key" not in st.session_state:
+    st.session_state.api_key = ""
 
 example_prompts=[
     "How can we improve our effort in improving the health of this planet?",
@@ -71,6 +73,42 @@ def set_api_key():
 def unlock_fields():
     st.session_state.locked = False
 
+
+vectorstore_settings = VectorstoreSettings(
+    embedding_model=st.secrets["EMBEDDING_MODEL"],
+    collection_name=st.secrets["COLLECTION_NAME"],
+    dimension=st.secrets["DIMENSION"],
+    retrieve_documents_count=st.secrets["RETRIEVE_DOCUMENTS_COUNT"],
+    distance=st.secrets["DISTANCE"],
+    qdrant_endpoint=st.secrets["QDRANT_ENDPOINT"],
+    qdrant_api_key=st.secrets["QDRANT_API_KEY"],
+)
+
+llmmodel_settings = LLMModelSettings(
+    model_name=st.secrets["MODEL_NAME"],
+    temperature=st.secrets["TEMPERATURE"],
+    openai_api_key=st.session_state.api_key,
+    prompts=PromptLoader(),
+)
+
+mail_settings = MailSettings(
+    smtp_host=st.secrets["SMTP_HOST"],
+    smtp_port=st.secrets["SMTP_PORT"],
+    smtp_from=st.secrets["SMTP_FROM"],
+    smtp_to=st.secrets["SMTP_TO"],
+    smtp_username=st.secrets["SMTP_USERNAME"],
+    smtp_password=st.secrets["SMTP_PASSWORD"],
+)
+
+settings = Settings(
+    raw_dir=st.secrets["RAW_DIR"],
+    data_dir=st.secrets["DATA_DIR"],
+
+    vectorstore=vectorstore_settings,
+    llm_model=llmmodel_settings,
+    mail=mail_settings,
+)
+
 if st.button("Show current loaded files"):
     show_current_files(settings)
 
@@ -99,40 +137,6 @@ else:
 if not st.session_state.locked:
     st.warning("Please set your Openai API Key before starting.")
 else:
-    vectorstore_settings = VectorstoreSettings(
-        embedding_model=st.secrets["EMBEDDING_MODEL"],
-        collection_name=st.secrets["COLLECTION_NAME"],
-        dimension=st.secrets["DIMENSION"],
-        retrieve_documents_count=st.secrets["RETRIEVE_DOCUMENTS_COUNT"],
-        distance=st.secrets["DISTANCE"],
-        qdrant_endpoint=st.secrets["QDRANT_ENDPOINT"],
-        qdrant_api_key=st.secrets["QDRANT_API_KEY"],
-    )
-
-    llmmodel_settings = LLMModelSettings(
-        model_name=st.secrets["MODEL_NAME"],
-        temperature=st.secrets["TEMPERATURE"],
-        prompts=PromptLoader()
-    )
-
-    mail_settings = MailSettings(
-        smtp_host=st.secrets["SMTP_HOST"],
-        smtp_port=st.secrets["SMTP_PORT"],
-        smtp_from=st.secrets["SMTP_FROM"],
-        smtp_to=st.secrets["SMTP_TO"],
-        smtp_username=st.secrets["SMTP_USERNAME"],
-        smtp_password=st.secrets["SMTP_PASSWORD"],
-    )
-
-    settings = Settings(
-        raw_dir=st.secrets["RAW_DIR"],
-        data_dir=st.secrets["DATA_DIR"],
-        openai_api_key=st.session_state.api_key,
-
-        vectorstore=vectorstore_settings,
-        llm_model=llmmodel_settings,
-        mail=mail_settings,
-    )
 
     qdrant_langchain_wrapper = QdrantLangchainWrapper(vectorstore_settings)
 

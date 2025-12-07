@@ -24,6 +24,7 @@ class VectorstoreSettings(BaseModel):
 class LLMModelSettings(BaseModel):
     model_name: str
     temperature: float
+    openai_api_key: str
     prompts: PromptLoader = PromptLoader()
 
 
@@ -42,7 +43,6 @@ class Settings(BaseModel):
     """
     data_dir: Path
     raw_dir: Path
-    openai_api_key: str
 
     vectorstore: VectorstoreSettings
     llm_model: LLMModelSettings
