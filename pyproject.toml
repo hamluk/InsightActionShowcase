@@ -1,0 +1,91 @@
+[project]
+name = "insightactionshowcase"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Lukas Hamm"}
+]
+readme = "README.md"
+requires-python = ">=3.13,<4.0"
+dependencies = [
+    "fitz (>=0.0.1.dev2,<0.0.2)",
+    "langchain-core (>=1.1.1,<2.0.0)",
+    "pydantic-settings (>=2.12.0,<3.0.0)",
+    "qdrant-client (>=1.16.1,<2.0.0)",
+    "langchain-community (>=0.4.1,<0.5.0)",
+    "langchain-qdrant (>=1.1.0,<2.0.0)",
+    "langchain-openai (>=1.1.0,<2.0.0)",
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.14.8"
+
+# --- ruff config ---
+[tool.ruff]
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+    "__init__.py",
+]
+
+line-length = 120
+indent-width = 4
+target-version = "py313"
+
+[tool.ruff.lint]
+fixable = ["ALL"]
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+# --- mypy config ---
+[tool.mypy]
+python_version = 3.13
+check_untyped_defs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
