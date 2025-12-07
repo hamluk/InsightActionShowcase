@@ -3,10 +3,9 @@ from pathlib import Path
 from typing import List
 
 from pydantic import BaseModel
-from pydantic_settings import BaseSettings, SettingsConfigDict
 from qdrant_client.http.models import Distance
 
-from src.app.core.prompt import PromptLoader
+from src.app.schemas.prompt import PromptLoader
 
 
 class VectorstoreSettings(BaseModel):
@@ -37,24 +36,13 @@ class MailSettings(BaseModel):
     smtp_password: str
 
 
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", env_nested_delimiter="__")
-
+class Settings(BaseModel):
     """
     Settings class for backend app
     """
-    app_host: str
-    app_port: int
     data_dir: Path
     raw_dir: Path
-    ALLOWED_EXTENSIONS: List[str]
     openai_api_key: str
-    namespace: str
-    FILE_MAX_SIZE: int
-    chunk_size: int
-    chunk_overlap: int
-    add_start_index: bool
-    pseudonymize_on_ingest: bool
 
     vectorstore: VectorstoreSettings
     llm_model: LLMModelSettings

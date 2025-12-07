@@ -18,7 +18,9 @@ class QdrantLangchainWrapper:
     def __init__(self, vectorstore_settings: VectorstoreSettings):
         self.vectorstore_settings = vectorstore_settings
         self.embeddings = OpenAIEmbeddings(model=self.vectorstore_settings.embedding_model)
+        self.store = None
 
+    def _connect(self):
         self.qdrant_client: QdrantClient = QdrantClient(
             location=self.vectorstore_settings.qdrant_endpoint,
             api_key=self.vectorstore_settings.qdrant_api_key
@@ -58,4 +60,7 @@ class QdrantLangchainWrapper:
         :param k: number of results to retrieve
         :return: langchain vectorstore retriever for building RAG chains
         """
+        if not self.store:
+            self._connect()
+
         return self.store.as_retriever(search_kwargs={"k": k})

@@ -1,6 +1,6 @@
 from langchain_openai import ChatOpenAI
 
-from src.app.core.config import LLMModelSettings
+from src.app.config import LLMModelSettings
 
 
 def init_openai_chat_model(llm_model_settings: LLMModelSettings):

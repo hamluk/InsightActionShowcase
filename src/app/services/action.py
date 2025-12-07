@@ -6,12 +6,13 @@ from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts.chat import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
-from src.app.config import LLMModelSettings, MailSettings
+from src.app.config import LLMModelSettings, MailSettings, Settings
+from src.app.database.langchain_qdrant_wrapper import QdrantLangchainWrapper
 from src.app.schemas.action import ActionProposal
 from src.app.schemas.insight import Insight
 
 
-async def run_retrival_insight_chain(insight: Insight, llm_model_settings: LLMModelSettings):
+def _run_retrival_insight_chain(insight: Insight, llm_model_settings: LLMModelSettings):
     chat_prompt = ChatPromptTemplate([
         ("system", llm_model_settings.prompts.propose_action_prompt),
         ("human", "Create the action proposal based on the given insight information.")
@@ -34,7 +35,7 @@ async def run_retrival_insight_chain(insight: Insight, llm_model_settings: LLMMo
     return response
 
 
-async def propose_action(
+def _propose_action(
         insight: Insight,
         llm_model_settings: LLMModelSettings,
 ):
@@ -45,12 +46,27 @@ async def propose_action(
     :return:
     """
 
-    response = await run_retrival_insight_chain(
+    response = _run_retrival_insight_chain(
         insight=insight,
         llm_model_settings=llm_model_settings
     )
 
     return response
+
+
+def create_action_proposal_on_given_insight(
+        insight: Insight,
+        settings: Settings,
+):
+    insight = insight
+
+    action_proposal = _propose_action(
+        insight=insight,
+        llm_model_settings=settings.llm_model
+    )
+
+    return action_proposal
+
 
 def send_mail(
         action: ActionProposal,
